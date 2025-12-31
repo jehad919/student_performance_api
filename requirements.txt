@@ -1,4 +1,6 @@
 fastapi
 pycaret
 uvicorn
+pandas==2.2.2
+
 
