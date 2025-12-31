@@ -1,0 +1,4 @@
+fastapi
+pycaret
+uvicorn
+

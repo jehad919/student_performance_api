@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توقع درجات الطلاب</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-blue-100 via-white to-green-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-xl">
+        <h1 class="text-2xl font-bold text-center text-blue-700 mb-6">نموذج توقع درجات الطلاب</h1>
+
+        <form id="predictionForm" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 font-medium">العمر (15-18)</label>
+                    <input type="number" name="Age" min="15" max="18" required class="w-full border rounded-md p-2 mt-1">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">الجنس</label>
+                    <select name="Gender" required class="w-full border rounded-md p-2 mt-1">
+                        <option value="0">ذكر</option>
+                        <option value="1">أنثى</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">العرق</label>
+                    <select name="Ethnicity" required class="w-full border rounded-md p-2 mt-1">
+                        <option value="0">قوقازي</option>
+                        <option value="1">أفريقي أمريكي</option>
+                        <option value="2">آسيوي</option>
+                        <option value="3">آخر</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">تعليم الوالدين</label>
+                    <select name="ParentalEducation" required class="w-full border rounded-md p-2 mt-1">
+                        <option value="0">لا يوجد</option>
+                        <option value="1">ثانوي</option>
+                        <option value="2">بعض الدراسة الجامعية</option>
+                        <option value="3">بكالوريوس</option>
+                        <option value="4">أعلى</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">وقت الدراسة الأسبوعي</label>
+                    <input type="number" name="StudyTimeWeekly" step="0.1" min="0" max="20" required class="w-full border rounded-md p-2 mt-1">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">عدد الغياب</label>
+                    <input type="number" name="Absences" min="0" max="30" required class="w-full border rounded-md p-2 mt-1">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">دروس خصوصية</label>
+                    <select name="Tutoring" required class="w-full border rounded-md p-2 mt-1">
+                        <option value="0">لا</option>
+                        <option value="1">نعم</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">دعم الوالدين</label>
+                    <select name="ParentalSupport" required class="w-full border rounded-md p-2 mt-1">
+                        <option value="0">لا يوجد</option>
+                        <option value="1">منخفض</option>
+                        <option value="2">متوسط</option>
+                        <option value="3">عالي</option>
+                        <option value="4">عالي جدًا</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">أنشطة لا منهجية</label>
+                    <select name="Extracurricular" required class="w-full border rounded-md p-2 mt-1">
+                        <option value="0">لا</option>
+                        <option value="1">نعم</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">رياضة</label>
+                    <select name="Sports" required class="w-full border rounded-md p-2 mt-1">
+                        <option value="0">لا</option>
+                        <option value="1">نعم</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">موسيقى</label>
+                    <select name="Music" required class="w-full border rounded-md p-2 mt-1">
+                        <option value="0">لا</option>
+                        <option value="1">نعم</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">تطوع</label>
+                    <select name="Volunteering" required class="w-full border rounded-md p-2 mt-1">
+                        <option value="0">لا</option>
+                        <option value="1">نعم</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-blue-700 transition">توقع الدرجة</button>
+        </form>
+
+        <div id="result" class="mt-6 text-xl font-semibold text-center text-green-700"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('predictionForm');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const queryParams = new URLSearchParams(formData).toString();
+
+            try {
+                const response = await fetch(`https://student-performance-api-em9r.onrender.com/predict?${queryParams}`);
+                const data = await response.json();
+                resultDiv.textContent = "الدرجة المتوقعة: " + data["الدرجة المتوقعة"];
+            } catch (err) {
+                resultDiv.textContent = "حدث خطأ، يرجى التحقق من القيم المدخلة.";
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>
