@@ -3,9 +3,10 @@ setuptools>=70.0
 wheel
 
 pycaret==3.0.2
-pandas==2.2.2
+pandas
 numpy<2.0
 scikit-learn<1.5
 
 fastapi
 uvicorn
+
